@@ -157,7 +157,7 @@ function OrderCard ({codiceordine,dataordine,tracking,fiordilatte,pecorino,provo
         {provolonedelmonaco ? <li className="text-sm"><font className="font-light">PROVOLONE DEL MONACO:</font> {provolonedelmonaco}kg <hr className="my-1"/></li> : null}
         {ricotta ? <li className="text-sm"><font className="font-light">RICOTTA:</font> {provolonedelmonaco}kg <hr className="my-1"/></li> : null}
         {olio ? <li className="text-sm"><font className="font-light">OLIO:</font> {olio}kg <hr className="my-1"/></li> : null}
-        {pizzabox ? <li className="text-sm"><font className="font-light">PIZZA BOX:</font> {pizzabox}kg <hr className="my-1"/></li> : null}
+        {pizzabox ? <li className="text-sm"><font className="font-light">PIZZA BOX:</font> {pizzabox}pz <hr className="my-1"/></li> : null}
         {portaposate ? <li className="text-sm"><font className="font-light">PORTA POSATE:</font> {portaposate}kg <hr className="my-1"/></li> : null}
       </ul>
       <div className="flex justify-center items-center bg-brand mt-2 rounded-xl ">

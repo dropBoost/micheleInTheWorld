@@ -2,80 +2,69 @@
 
 import { useEffect, useState } from "react"
 import { supabase } from "../../../lib/supabaseClient"
-import { useRouter, useParams } from "next/navigation"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 import MENUhomepage from "./componenti/menuhomepage"
 
 export default function Dashboard() {
   const [user, setUser] = useState(null)
+  const [datiUtente, setDatiUtente] = useState(null)
   const router = useRouter()
- 
-  useEffect(() => {
-    async function getUser() {
-      const { data } = await supabase.auth.getSession()
 
-      if (!data.session) {
-        // non loggato → redirect a login (/)
-        router.push("/")
+  // 🔹 Controllo sessione
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+
+      if (!session) {
+        router.push("/") // non loggato → login
       } else {
-        // loggato → salva l'utente nello stato
-        setUser(data.session.user)
+        setUser(session.user)
       }
     }
 
     getUser()
   }, [router])
 
+  // 🔹 Recupera profilo utente dalla tabella profiles
+  useEffect(() => {
+    if (!user) return // aspetta che user sia settato
 
+    const fetchProfile = async () => {
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .maybeSingle()
 
+      if (profileError) {
+        console.error("Errore fetch profile:", profileError)
+        return
+      }
 
-
-  function caricaOrdineBufala() {
-    if (user) {
-      router.push(`/pizzeria/bufala/${user.id}`)
+      setDatiUtente(profile)
     }
-  }
 
-  function caricaOrdineLatticini() {
-    if (user) {
-      router.push(`/pizzeria/latticini/${user.id}`)
+    fetchProfile()
+  }, [user])
+
+  // 🔹 Redirect in base al ruolo
+  useEffect(() => {
+    if (!datiUtente) return // aspetta che il profilo sia caricato
+
+    if (datiUtente.role === "admin") {
+      router.push("/admin")
+    } else if (datiUtente.role === "user") {
+      router.push("/pizzeria")
     }
-  }
+  }, [datiUtente, router])
 
-
-
-  if (!user) return <p>Caricamento...</p>
-
+  if (!user || !datiUtente) return <p>Caricamento...</p>
 
   return (
-  <>
-  <div className="flex flex-col gap-3 w-full h-full">
-
-    {/* CARICAMENTO ORDINI */}
-    <div className="p-5 rounded-lg">
+    <div className="flex flex-col gap-3 w-full h-full">
+      <div className="p-5 rounded-lg">
         <MENUhomepage/>
+      </div>
     </div>
-
-    {/* BR PER SPAZIO */}
-
-  </div>
-  </>  
   )
 }
-
-
-
-
-
-function ButtonOrdini ({nome, evento}) {
-  return(
-    <>
-    <button className="py-1 px-2 w-fit text-xs bg-brand-700 text-white rounded hover:bg-neutral-100 hover:text-brand" onClick={evento}>
-        {nome}
-    </button>
-    </>
-  )
-}
-
-
-          

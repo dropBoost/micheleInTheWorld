@@ -14,9 +14,19 @@ export default function Home() {
   // 🔹 Redirect automatico se già loggato
   useEffect(() => {
     async function checkSession() {
-      const { data } = await supabase.auth.getSession()
-      if (data.session) {
-        router.replace("/pizzeria")
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session) {
+        // Recupera ruolo dalla tabella profiles
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", session.user.id)
+          .maybeSingle()
+
+        const role = profile?.role || "user"
+
+        if (role === "admin") router.replace("/admin")
+        else router.replace("/pizzeria")
       }
     }
     checkSession()
@@ -26,9 +36,10 @@ export default function Home() {
     e.preventDefault()
     setLoading(true)
 
+    // Trova email tramite utente
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
-      .select("email")
+      .select("email, role")
       .eq("utente", utente)
       .maybeSingle()
 
@@ -38,6 +49,7 @@ export default function Home() {
       return
     }
 
+    // Login con email e password
     const { error } = await supabase.auth.signInWithPassword({
       email: profile.email,
       password,
@@ -49,8 +61,13 @@ export default function Home() {
       return
     }
 
-    // redirect dopo login
-    router.push("/pizzeria")
+    // 🔹 Controllo ruolo dopo login
+    const role = profile.role || "user"
+
+    if (role === "admin") router.push("/admin")
+    else router.push("/pizzeria")
+
+    setLoading(false)
   }
 
   return (

@@ -68,24 +68,6 @@ export default function PAGEordinibufala() {
     setLoading(false)
   }
 
-  function CampoOrdine({ name, label, type }) {
-    return (
-      <div key={name} className="flex flex-col">
-        <label htmlFor={name} className="font-normal mb-1">{label}</label>
-        <input
-          type={type}
-          id={name}
-          name={name}
-          value={form[name]}
-          onChange={handleChange}
-          placeholder="0"
-          min={0}
-          className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-      </div>
-    )
-  }
-
   return (
     <>
     <div className="flex flex-col gap-4 p-4">
@@ -98,8 +80,22 @@ export default function PAGEordinibufala() {
         onSubmit={handleSubmit}
         className="grid grid-cols-1 gap-4 p-6 max-w-xl  bg-white border border-brand/70 rounded-lg sha"
       >
-        <CampoOrdine name="pizzaBox" label="Pizza Box" type="number"/>
 
+        <label htmlFor="pizzaBox">Pizza Box</label>
+        <select
+          id="pizzaBox"
+          name="pizzaBox"
+          value={form.pizzaBox}
+          onChange={handleChange}
+          className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-brand"
+          
+        >
+          <option value="">-- Seleziona un'opzione --</option>
+          <option value="1500">1500pz</option>
+          <option value="3000">3000pz</option>
+          <option value="6000">6000pz</option>
+          <option value="9000">9000pz</option>
+        </select>
         <button
           type="submit"
           disabled={loading}
