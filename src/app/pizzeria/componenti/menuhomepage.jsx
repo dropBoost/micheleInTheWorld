@@ -10,7 +10,8 @@ import { faHome  } from '@fortawesome/free-solid-svg-icons';
 import { moduliGestionale } from '@/app/cosetting';
 
 export default function MENUhomepage () {
-
+    
+    const [user, setUser] = useState ("")
     const [userID, setUserID] = useState ("")
     const router = useRouter()
     const pathname = usePathname();
@@ -34,7 +35,7 @@ export default function MENUhomepage () {
     getUser()
     }, [router])
 
-
+    console.log("testudd",userID)
     return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 p-5 overflow-auto h-full auto-rows-[200px]">
     {moduliGestionale
