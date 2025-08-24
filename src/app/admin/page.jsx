@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "../../../lib/supabaseClient"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons"
+
+const ICONoff = <FontAwesomeIcon icon={faRightFromBracket}/>
 
 export default function PAGEAdmin() {
   const router = useRouter()
@@ -42,8 +46,8 @@ export default function PAGEAdmin() {
 
     //LOGOUT
     async function handleLogout() {
-    await supabase.auth.signOut()
-    router.push("/")
+      await supabase.auth.signOut()
+      router.push("/")
     }  
 
   if (loading) return <p>Caricamento...</p>
